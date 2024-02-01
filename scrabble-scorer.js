@@ -1,6 +1,7 @@
 // This assignment is inspired by a problem on Exercism (https://exercism.org/tracks/javascript/exercises/etl) that demonstrates Extract-Transform-Load using Scrabble's scoring system. 
 
 const input = require("readline-sync");
+let wordToScore = '';
 
 const oldPointStructure = {
   1: ['A', 'E', 'I', 'O', 'U', 'L', 'N', 'R', 'S', 'T'],
@@ -11,6 +12,11 @@ const oldPointStructure = {
   8: ['J', 'X'],
   10: ['Q', 'Z']
 };
+
+const vowelBonusPointStructure = {
+   1: ['B', 'C', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'X', 'Z'],
+   3: ['A', 'E', 'I', 'O', 'U']
+ };
 
 function oldScrabbleScorer(word) {
 	word = word.toUpperCase();
@@ -33,18 +39,65 @@ function oldScrabbleScorer(word) {
 // don't change the names or your program won't work as expected. //
 
 function initialPrompt() {
-   console.log("Let's play some scrabble! Enter a word:");
+   console.log("Let's play some scrabble!");
+   wordToScore = input.question("Enter a word to score: ");
+   // console.log(oldScrabbleScorer(wordToScore));
+   // console.log(simpleScorer(wordToScore));
+   // console.log(vowelBonusScorer(wordToScore));
 };
 
-let simpleScorer;
+let simpleScorer = function(word) {
+   word = word.toUpperCase();
+   let simplePoints = 0;
+   for (i = 0; i < word.length; i++) {
+      simplePoints++;
+   }
+   return simplePoints;
+};
 
-let vowelBonusScorer;
+let vowelBonusScorer = function(word) {
+   word = word.toUpperCase();
+   let vowelPoints = 0;
 
-let scrabbleScorer;
+   for (let i = 0; i < word.length; i++) {
+      for (const pointValue in vowelBonusPointStructure) {
+         if (vowelBonusPointStructure[pointValue].includes(word[i])) {
+            vowelPoints += Number(pointValue);
+         }
+      }
+   }
+   return vowelPoints
+};
 
-const scoringAlgorithms = [];
+let scrabbleScorer = oldScrabbleScorer;
 
-function scorerPrompt() {}
+const scoringAlgorithms = [
+   {
+      name: "Simple Score",
+      description: "Each letter is worth 1 point.",
+      scoringFunction: simpleScorer
+   },
+   {
+      name: "Bonus Vowels",
+      description: "Vowels are 3 pts, consonants are 1 pt.",
+      scoringFunction: vowelBonusScorer
+   },
+   {
+      name: "Scrabble",
+      description: "The traditional scoring algorithm.",
+      scoringFunction: scrabbleScorer
+   }
+];
+
+function scorerPrompt() {
+   let num = Number(input.question(`Which scoring algorithm would you like to use?
+
+   0 - Simple: One point per character
+   1 - Vowel Bonus: Vowels are worth 3 points
+   2 - Scrabble: Uses scrabble point system
+   Enter 0, 1, or 2: `))
+   return scoringAlgorithms[num];
+}
 
 function transform() {};
 
@@ -52,7 +105,8 @@ let newPointStructure;
 
 function runProgram() {
    initialPrompt();
-   
+   let scorer = scorerPrompt();
+   console.log(`Score for '${wordToScore}': ${scorer.scoringFunction(wordToScore)}`);
 }
 
 // Don't write any code below this line //
