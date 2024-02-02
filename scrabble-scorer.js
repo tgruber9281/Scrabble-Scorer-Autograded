@@ -49,7 +49,7 @@ function getValidInput(prompt, test) {
 }
 
 function isString(userInput) {
-   let regex = /^[A-Za-z]+$/;
+   let regex = /^[a-zA-Z][a-zA-Z ]+$/;
    if (regex.test(userInput)) {
       return true;
    }
