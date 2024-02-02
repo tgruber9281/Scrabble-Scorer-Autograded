@@ -50,10 +50,7 @@ function getValidInput(prompt, test) {
 
 function isString(userInput) {
    let regex = /^[a-zA-Z][a-zA-Z ]+$/;
-   if (regex.test(userInput)) {
-      return true;
-   }
-   return false;
+   return regex.test(userInput)
 }
 
 function isNum(userInput) {
