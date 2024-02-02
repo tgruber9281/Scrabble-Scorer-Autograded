@@ -142,8 +142,7 @@ function transform(obj) {
          newPointStructure[letters[i].toLowerCase()] = Number(num);
       }
    }
-   newPointStructure[' '] = 0;
-   // console.log(newPointStructure)
+   // newPointStructure[' '] = 0;
    return newPointStructure 
 };
 
